@@ -90,6 +90,7 @@ class GrpcMasterService : public AsyncServiceInterface {
 // to keep accepting new requests.
 #define ENQUEUE_REQUEST(method, supports_cancel)                              \
   do {                                                                        \
+    printf("Master EnqueueRequest " #method "\n");	\
     mutex_lock l(mu_);                                                        \
     if (!is_shutdown_) {                                                      \
       Call<GrpcMasterService, grpc::MasterService::AsyncService,              \
@@ -144,6 +145,7 @@ class GrpcMasterService : public AsyncServiceInterface {
   // RPC handler for creating a session.
   void CreateSessionHandler(
       MasterCall<CreateSessionRequest, CreateSessionResponse>* call) {
+    printf("MasterHandler CreateSessionHandler \n");
     master_impl_->CreateSession(&call->request, &call->response,
                                 [call](const Status& status) {
                                   call->SendResponse(ToGrpcStatus(status));
@@ -154,6 +156,7 @@ class GrpcMasterService : public AsyncServiceInterface {
   // RPC handler for extending a session.
   void ExtendSessionHandler(
       MasterCall<ExtendSessionRequest, ExtendSessionResponse>* call) {
+    printf("MasterHandler ExtendSessionHandler \n");
     master_impl_->ExtendSession(&call->request, &call->response,
                                 [call](const Status& status) {
                                   call->SendResponse(ToGrpcStatus(status));
@@ -164,6 +167,7 @@ class GrpcMasterService : public AsyncServiceInterface {
   // RPC handler for setting up a partial run call.
   void PartialRunSetupHandler(
       MasterCall<PartialRunSetupRequest, PartialRunSetupResponse>* call) {
+    printf("MasterHandler PartialRunSetupHandler \n");
     master_impl_->PartialRunSetup(&call->request, &call->response,
                                   [call](const Status& status) {
                                     call->SendResponse(ToGrpcStatus(status));
@@ -173,6 +177,7 @@ class GrpcMasterService : public AsyncServiceInterface {
 
   // RPC handler for running one step in a session.
   void RunStepHandler(MasterCall<RunStepRequest, RunStepResponse>* call) {
+    printf("MasterHandler RunStepHandler \n");
     auto* trace = TraceRpc("RunStep/Server", call->client_metadata());
     CallOptions* call_opts = new CallOptions;
     if (call->request.options().timeout_in_ms() > 0) {
@@ -207,6 +212,7 @@ class GrpcMasterService : public AsyncServiceInterface {
   // RPC handler for deleting a session.
   void CloseSessionHandler(
       MasterCall<CloseSessionRequest, CloseSessionResponse>* call) {
+    printf("MasterHandler CloseSessionHandler \n");
     master_impl_->CloseSession(&call->request, &call->response,
                                [call](const Status& status) {
                                  call->SendResponse(ToGrpcStatus(status));
@@ -217,6 +223,7 @@ class GrpcMasterService : public AsyncServiceInterface {
   // RPC handler for listing devices.
   void ListDevicesHandler(
       MasterCall<ListDevicesRequest, ListDevicesResponse>* call) {
+    printf("MasterHandler ListDivecesHandler \n");
     master_impl_->ListDevices(&call->request, &call->response,
                               [call](const Status& status) {
                                 call->SendResponse(ToGrpcStatus(status));
@@ -226,6 +233,7 @@ class GrpcMasterService : public AsyncServiceInterface {
 
   // RPC handler for resetting all sessions.
   void ResetHandler(MasterCall<ResetRequest, ResetResponse>* call) {
+    printf("MasterHandler ResetHandler \n");
     master_impl_->Reset(&call->request, &call->response,
                         [call](const Status& status) {
                           call->SendResponse(ToGrpcStatus(status));

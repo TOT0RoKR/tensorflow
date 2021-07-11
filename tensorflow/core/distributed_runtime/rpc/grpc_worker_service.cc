@@ -94,6 +94,7 @@ class GrpcWorkerService : public AsyncServiceInterface {
 // to keep accepting new requests.
 #define ENQUEUE_REQUEST(method, supports_cancel)                             \
   do {                                                                       \
+    printf("Worker EnqueueRequest " #method "\n");	\
     mutex_lock l(shutdown_mu_);                                              \
     if (!is_shutdown_) {                                                     \
       Call<GrpcWorkerServiceThread, grpc::WorkerService::AsyncService,       \
@@ -202,6 +203,7 @@ class GrpcWorkerService : public AsyncServiceInterface {
 
     void GetStatusHandler(
         WorkerCall<GetStatusRequest, GetStatusResponse>* call) {
+      printf("Worker GetStatusHandler \n");
       Schedule([this, call]() {
         Status s = worker_->GetStatus(&call->request, &call->response);
         call->SendResponse(ToGrpcStatus(s));
@@ -212,6 +214,7 @@ class GrpcWorkerService : public AsyncServiceInterface {
     void CreateWorkerSessionHandler(
         WorkerCall<CreateWorkerSessionRequest, CreateWorkerSessionResponse>*
             call) {
+      printf("Worker CreateWorkerSessionHandler \n");
       Schedule([this, call]() {
         Status s =
             worker_->CreateWorkerSession(&call->request, &call->response);
@@ -223,6 +226,7 @@ class GrpcWorkerService : public AsyncServiceInterface {
     void DeleteWorkerSessionHandler(
         WorkerCall<DeleteWorkerSessionRequest, DeleteWorkerSessionResponse>*
             call) {
+      printf("Worker DeleteWorkerSessionHandler \n");
       Schedule([this, call]() {
         Status s =
             worker_->DeleteWorkerSession(&call->request, &call->response);
@@ -233,6 +237,7 @@ class GrpcWorkerService : public AsyncServiceInterface {
 
     void CleanupAllHandler(
         WorkerCall<CleanupAllRequest, CleanupAllResponse>* call) {
+      printf("Worker CleanupAllHandler \n");
       Schedule([this, call]() {
         Status s = worker_->CleanupAll(&call->request, &call->response);
         call->SendResponse(ToGrpcStatus(s));
@@ -242,6 +247,7 @@ class GrpcWorkerService : public AsyncServiceInterface {
 
     void RegisterGraphHandler(
         WorkerCall<RegisterGraphRequest, RegisterGraphResponse>* call) {
+      printf("Worker RegisterGraphHandler \n");
       Schedule([this, call]() {
         Status s = worker_->RegisterGraph(&call->request, &call->response);
         call->SendResponse(ToGrpcStatus(s));
@@ -251,6 +257,7 @@ class GrpcWorkerService : public AsyncServiceInterface {
 
     void DeregisterGraphHandler(
         WorkerCall<DeregisterGraphRequest, DeregisterGraphResponse>* call) {
+      printf("Worker DeregisterGraphHandler \n");
       Schedule([this, call]() {
         Status s = worker_->DeregisterGraph(&call->request, &call->response);
         call->SendResponse(ToGrpcStatus(s));
@@ -259,6 +266,7 @@ class GrpcWorkerService : public AsyncServiceInterface {
     }
 
     void RunGraphHandler(WorkerCall<RunGraphRequest, RunGraphResponse>* call) {
+      printf("Worker RunGraphHandler \n");
       Schedule([this, call]() {
         CallOptions* call_opts = new CallOptions;
         ProtoRunGraphRequest* wrapped_request =
@@ -281,6 +289,7 @@ class GrpcWorkerService : public AsyncServiceInterface {
 
     void RecvTensorHandlerRaw(
         WorkerCall<RecvTensorRequest, ::grpc::ByteBuffer>* call) {
+      printf("Worker RecvTensorHandlerRaw\n");
       Schedule([this, call]() {
         CallOptions* call_opts = new CallOptions;
         call->SetCancelCallback([call_opts]() { call_opts->StartCancel(); });
@@ -296,6 +305,7 @@ class GrpcWorkerService : public AsyncServiceInterface {
 
     void CleanupGraphHandler(
         WorkerCall<CleanupGraphRequest, CleanupGraphResponse>* call) {
+      printf("Worker CleanupGraphHandler\n");
       Schedule([this, call]() {
         Status s = worker_->CleanupGraph(&call->request, &call->response);
         call->SendResponse(ToGrpcStatus(s));
@@ -304,6 +314,7 @@ class GrpcWorkerService : public AsyncServiceInterface {
     }
 
     void LoggingHandler(WorkerCall<LoggingRequest, LoggingResponse>* call) {
+      printf("Worker LoggingHandler\n");
       Schedule([this, call]() {
         Status s = worker_->Logging(&call->request, &call->response);
         call->SendResponse(ToGrpcStatus(s));
@@ -312,6 +323,7 @@ class GrpcWorkerService : public AsyncServiceInterface {
     }
 
     void TracingHandler(WorkerCall<TracingRequest, TracingResponse>* call) {
+      printf("Worker TracingHandler\n");
       Schedule([this, call]() {
         Status s = worker_->Tracing(&call->request, &call->response);
         call->SendResponse(ToGrpcStatus(s));

@@ -68,6 +68,7 @@ class GrpcRemoteMaster : public MasterInterface {
                  MutableRunStepResponseWrapper* response) override {
     ::grpc::ClientContext ctx;
     auto trace = TraceRpc("RunStep/Client", &ctx);
+    printf("GrpcRemoteMaster RunStep \n");
     return Call(&ctx, call_options, &request->ToProto(),
                 get_proto_from_wrapper(response), &MasterServiceStub::RunStep);
   }
