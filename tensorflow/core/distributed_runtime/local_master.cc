@@ -19,6 +19,7 @@ limitations under the License.
 
 #include "tensorflow/core/distributed_runtime/master.h"
 #include "tensorflow/core/platform/mutex.h"
+#include "tensorflow/core/platform/logging.h"
 
 namespace tensorflow {
 
@@ -61,6 +62,7 @@ Status LocalMaster::CreateSession(CallOptions* call_options,
   });
   TF_RETURN_IF_ERROR(
       WaitForNotification(call_options, default_timeout_in_ms_, &n));
+  LOG(INFO) << "LocalMaster::CreateSession";
   return ret;
 }
 
