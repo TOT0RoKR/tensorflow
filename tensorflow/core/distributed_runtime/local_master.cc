@@ -77,6 +77,7 @@ Status LocalMaster::ExtendSession(CallOptions* call_options,
   });
   TF_RETURN_IF_ERROR(
       WaitForNotification(call_options, default_timeout_in_ms_, &n));
+  LOG(INFO) << "LocalMaster::ExtendSession";
   return ret;
 }
 
@@ -91,6 +92,7 @@ Status LocalMaster::PartialRunSetup(CallOptions* call_options,
   });
   TF_RETURN_IF_ERROR(
       WaitForNotification(call_options, default_timeout_in_ms_, &n));
+  LOG(INFO) << "LocalMaster::PartialRunSetup";
   return ret;
 }
 
@@ -106,6 +108,7 @@ Status LocalMaster::RunStep(CallOptions* call_options,
                         });
   TF_RETURN_IF_ERROR(
       WaitForNotification(call_options, default_timeout_in_ms_, &n));
+  LOG(INFO) << "LocalMaster::RunStep";
   return ret;
 }
 
@@ -128,6 +131,7 @@ Status LocalMaster::CloseSession(CallOptions* call_options,
   });
   TF_RETURN_IF_ERROR(
       WaitForNotification(call_options, default_timeout_in_ms_, &n));
+  LOG(INFO) << "LocalMaster::CloseSession";
   return ret;
 }
 
@@ -142,6 +146,7 @@ Status LocalMaster::ListDevices(CallOptions* call_options,
   });
   TF_RETURN_IF_ERROR(
       WaitForNotification(call_options, default_timeout_in_ms_, &n));
+  LOG(INFO) << "LocalMaster::ListDevices";
   return ret;
 }
 
@@ -156,6 +161,7 @@ Status LocalMaster::Reset(CallOptions* call_options,
   });
   TF_RETURN_IF_ERROR(
       WaitForNotification(call_options, default_timeout_in_ms_, &n));
+  LOG(INFO) << "LocalMaster::Reset";
   return ret;
 }
 
@@ -193,9 +199,11 @@ std::unique_ptr<LocalMaster> LocalMaster::Lookup(const string& target) {
   std::unique_ptr<LocalMaster> ret;
   mutex_lock l(*get_local_master_registry_lock());
   auto iter = local_master_registry()->find(target);
+  LOG(INFO) << "LocalMaster::Lookup - target(" << target << ")";
   if (iter != local_master_registry()->end()) {
     ret.reset(new LocalMaster(iter->second.master,
                               iter->second.default_timeout_in_ms));
+    LOG(INFO) << "LocalMaster::Lookup - new LocalMaster";
   }
   return ret;
 }

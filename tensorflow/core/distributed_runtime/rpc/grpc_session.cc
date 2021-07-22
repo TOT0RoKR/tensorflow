@@ -28,6 +28,7 @@ limitations under the License.
 #include "tensorflow/core/lib/core/errors.h"
 #include "tensorflow/core/platform/mutex.h"
 #include "tensorflow/core/protobuf/master.pb.h"
+#include "tensorflow/core/platform/logging.h"
 
 namespace tensorflow {
 
@@ -49,6 +50,7 @@ Status GrpcSession::Create(const SessionOptions& options,
   if (!options.config.rpc_options().use_rpc_for_inprocess_master()) {
     master = LocalMaster::Lookup(options.target);
   }
+  LOG(INFO) << "GrpcSession::Create - master(1:true/0:false) - " << (!!master);
   if (!master) {
     SharedGrpcChannelPtr master_channel;
     TF_RETURN_IF_ERROR(NewHostPortGrpcChannel(

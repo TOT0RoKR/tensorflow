@@ -26,6 +26,7 @@ limitations under the License.
 #include "tensorflow/core/lib/strings/strcat.h"
 #include "tensorflow/core/platform/tracing.h"
 #include "tensorflow/core/protobuf/master.pb.h"
+#include "tensorflow/core/platform/logging.h"
 
 namespace tensorflow {
 
@@ -44,6 +45,7 @@ class GrpcRemoteMaster : public MasterInterface {
                        const CreateSessionRequest* request,
                        CreateSessionResponse* response) override {
     ::grpc::ClientContext ctx;
+    LOG(INFO) << "GrpcRemoteMaster::CreateSession";
     return Call(&ctx, call_options, request, response,
                 &MasterServiceStub::CreateSession);
   }
@@ -52,6 +54,7 @@ class GrpcRemoteMaster : public MasterInterface {
                        const ExtendSessionRequest* request,
                        ExtendSessionResponse* response) override {
     ::grpc::ClientContext ctx;
+  LOG(INFO) << "GrpcRemoteMaster::ExtendSession";
     return Call(&ctx, call_options, request, response,
                 &MasterServiceStub::ExtendSession);
   }
@@ -60,6 +63,7 @@ class GrpcRemoteMaster : public MasterInterface {
                          const PartialRunSetupRequest* request,
                          PartialRunSetupResponse* response) override {
     ::grpc::ClientContext ctx;
+  LOG(INFO) << "GrpcRemoteMaster::PartialRunSetup";
     return Call(&ctx, call_options, request, response,
                 &MasterServiceStub::PartialRunSetup);
   }
@@ -68,7 +72,7 @@ class GrpcRemoteMaster : public MasterInterface {
                  MutableRunStepResponseWrapper* response) override {
     ::grpc::ClientContext ctx;
     auto trace = TraceRpc("RunStep/Client", &ctx);
-    printf("GrpcRemoteMaster RunStep \n");
+  LOG(INFO) << "GrpcRemoteMaster::RunStep";
     return Call(&ctx, call_options, &request->ToProto(),
                 get_proto_from_wrapper(response), &MasterServiceStub::RunStep);
   }
@@ -77,6 +81,7 @@ class GrpcRemoteMaster : public MasterInterface {
                       const CloseSessionRequest* request,
                       CloseSessionResponse* response) override {
     ::grpc::ClientContext ctx;
+  LOG(INFO) << "GrpcRemoteMaster::CloseSession";
     return Call(&ctx, call_options, request, response,
                 &MasterServiceStub::CloseSession);
   }
@@ -85,6 +90,7 @@ class GrpcRemoteMaster : public MasterInterface {
                      const ListDevicesRequest* request,
                      ListDevicesResponse* response) override {
     ::grpc::ClientContext ctx;
+  LOG(INFO) << "GrpcRemoteMaster::ListDevices";
     return Call(&ctx, call_options, request, response,
                 &MasterServiceStub::ListDevices);
   }
@@ -92,6 +98,7 @@ class GrpcRemoteMaster : public MasterInterface {
   Status Reset(CallOptions* call_options, const ResetRequest* request,
                ResetResponse* response) override {
     ::grpc::ClientContext ctx;
+  LOG(INFO) << "GrpcRemoteMaster::Reset";
     return Call(&ctx, call_options, request, response,
                 &MasterServiceStub::Reset);
   }

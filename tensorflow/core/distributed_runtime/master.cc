@@ -307,6 +307,7 @@ class DeviceFinder {
 void Master::CreateSession(const CreateSessionRequest* req,
                            CreateSessionResponse* resp, MyClosure done) {
   SchedClosure([this, req, resp, done]() {
+    LOG(INFO) << "MasterHandler CreateSessionHandler(target "; // << call->request.target() << ")";
     Status status;
     WorkerCacheFactoryOptions worker_cache_factory_options;
     string grpc_protocol("grpc");
